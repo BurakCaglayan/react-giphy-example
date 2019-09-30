@@ -1,3 +1,5 @@
+This app was created using react hooks. The purpose of the application: using Giphy APIs, to show trends and search results.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
