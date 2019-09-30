@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import SearchMain from "./views/search/SearchMain";
 import Trending from "./views/trending/Trending";
 
@@ -30,7 +29,7 @@ const App = () => {
       <div className="container">
         <SearchMain API_KEY={API_KEY} />
         <hr className="border border-danger" />
-        <Trending LoadTrending={LoadTrending} />
+        <Trending LoadTrending={LoadTrending} API_KEY={API_KEY}/>
       </div>
     </>
   );

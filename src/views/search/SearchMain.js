@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-import ShowImageResult from "../show/ShowImageResult";
 import Search from "./Search";
 import SearchResults from "./SearchResults";
 
@@ -10,59 +8,33 @@ const SearchMain = (props) => {
   const [LoadOffset, setLoadOffset] = useState(0);
   const [SearchText, setSearchText] = useState(null);
 
-  const {API_KEY} = props;
+  const { API_KEY } = props;
 
   useEffect(() => {
     if (SearchText === null) {
       console.log("SearchText Null");
     } else {
       axios
-        .get(`http://api.giphy.com/v1/gifs/search?q=${SearchText}&api_key=${API_KEY}&limit=8`)
+        .get(`http://api.giphy.com/v1/gifs/search?q=${SearchText}&api_key=${API_KEY}&limit=8&offset=${LoadOffset}`)
         .then(res => {
           console.log(res.data);
-
-          let responseData = res.data.data;
-          let textResponseSearch = [];
-
-          responseData.forEach((element, i) => {
-            textResponseSearch.push(<ShowImageResult imageurl={element.images.fixed_width.url} key={i} />);
-          });
-          setSearchResult(textResponseSearch);
+          setSearchResult(SearchResult.concat(res.data.data));
         })
         .catch(err => {
           console.log(err);
         });
     }
-  }, [SearchText]);
-
-  useEffect(() => {
-    if (LoadOffset === 0) {
-      console.log("Loading Offset = 0");
-    } else {
-      axios
-        .get(
-          `http://api.giphy.com/v1/gifs/search?q=${SearchText}&api_key=${API_KEY}&limit=8&offset=${LoadOffset}`
-        )
-        .then(res => {
-          console.log(res.data);
-          let responseData = res.data.data;
-          let textResponseSearchS = [];
-          responseData.forEach((element, i) => {
-            textResponseSearchS.push(<ShowImageResult imageurl={element.images.fixed_width.url} key={LoadOffset + i} />);
-          });
-          setSearchResult(SearchResult => {
-            const list = SearchResult.concat(textResponseSearchS);
-            return list;
-          });
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-  }, [LoadOffset]);
+  }, [SearchText, LoadOffset]);
 
   const handleSearchClick = text => {
-    setSearchText(text);
+    if (SearchText !== text) {
+      setSearchResult([]);
+      setLoadOffset(0);
+      setSearchText(text);
+    }
+    else {
+      console.log("Same text");
+    }
   };
 
   const handleLoadMoreClick = () => {
